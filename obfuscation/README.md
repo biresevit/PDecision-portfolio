@@ -1,5 +1,7 @@
 # Obfuscated customer delivery
 
+> **Permitted use:** These bots may only be used for research, poker practice in the [simulator](https://github.com/biresevit/simulator-portfolio), poker practice through a real poker-site client, or authorized load testing to assess a poker site's stability under high traffic. Running bots at real-money tables without disclosing their use to all human players is prohibited.
+
 How to build a customer-ready PDecision folder: the Release build, with `PDecision.dll` obfuscated so the API
 layer isn't readable from a decompiler. `DecisionMaking.dll` and its `PokerUtil.dll` dependency are **never**
 obfuscated - legacy strategy code has been observed to behave differently after metadata/member
@@ -90,7 +92,7 @@ evidence it works.
    non-200 too) until `status` is `ready`. Compare the timing and the log
    (`C:\PokerSuite\Logs\PDecision*.log`) against a plain (non-obfuscated) build of the same commit: it should
    reach Ready in about the same time, with the same sequence of log lines up to
-   `CasinoSettings <casino>: CONFIGURE_LOCALLY` → `done loading strategy files` → `Done Initialize`. If it stalls silently
+   `resource loading` → `done loading strategy files` → `Done Initialize`. If it stalls silently
    after a specific log line and never raises an exception, that's exactly how every bug in this file's SkipType
    list first showed up — see "Diagnosing a hang or silent failure" below.
 
@@ -123,7 +125,7 @@ dotnet-dump analyze hang.dmp
 ```
 
 Inside the analyzer:
-- `pstacks` groups all threads by stack — if your own code (`StatsLoader`, `DbStrategySettings`,
+- `pstacks` groups all threads by stack — if your own code (`StatsLoader`,
   `Controller`, CONFIGURE_LOCALLY) isn't on ANY thread's stack, nothing is running or blocked; the logical chain of
   work died silently somewhere (an unobserved faulted Task is the usual cause).
 - `dumpheap -stat -type Exception` lists every exception object still reachable on the heap, including ones

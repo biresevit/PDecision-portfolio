@@ -1,5 +1,7 @@
 # Tournament blinds kept at the first level
 
+> **Permitted use:** These bots may only be used for research, poker practice in the [simulator](https://github.com/biresevit/simulator-portfolio), poker practice through a real poker-site client, or authorized load testing to assess a poker site's stability under high traffic. Running bots at real-money tables without disclosing their use to all human players is prohibited.
+
 Decision requests from the Fifty50 SNG (tournament 128901414, table 128360738) on 2 Nov 2026, exactly as
 PokerController sent them to `/api/decision` (PDecision saved them under `C:\PokerSuite\HandStates`).
 Seat 0 is the hero; amounts are table chips / 100.

@@ -1,5 +1,7 @@
 # PDecision | Decision API and hand-history service
 
+> **Permitted use:** These bots may only be used for research, poker practice in the [simulator](https://github.com/biresevit/simulator-portfolio), poker practice through a real poker-site client, or authorized load testing to assess a poker site's stability under high traffic. Running bots at real-money tables without disclosing their use to all human players is prohibited.
+
 > Public portfolio snapshot with a fresh history. Deployment credentials are removed; configuration placeholders require your own services. Binary dependencies and generated PDF guides are omitted.
 
 A Windows desktop service hosting a REST API for poker decisions and hand-history processing. It maintains independent table contexts and uses the strategy libraries in simulator.
@@ -59,28 +61,6 @@ PLO6 table states are accepted and handled as PLO5 (`GetEnumGameType` in [Contro
 
 ICM pressure is calculated from `PlayersLeft`, `NumPlacesPaid` (the payout structure: number of paid places) and the players' `Stacks`. Clients must keep all three up to date in tournament requests, and set `TableType` and `PlayersTotal`. If `NumPlacesPaid` is 0 in a tournament, 20% of the entrants are assumed to be paid.
 
-### Strategy settings per casino (editable while running)
-
-`dbo.CasinoSettings` ([sql/CasinoSettings.sql](sql/CasinoSettings.sql)) is keyed by `(CustomerId, Casino)` and configures solver strategy by customer and casino:
-
-| Column | Meaning |
-|---|---|
-| `SolverVsHumans` | Use the solver (strong) strategy against humans. Off: the account profiles against every human. |
-| `SolverMinBigBlind` | Ring games: the feature is used from this big blind (table currency). `NULL` = every stake. |
-| `SolverMinBuyIn` | SNG/MTT: the feature is used from this buy-in (`TournamentBuyIn` of the request). `NULL` = every buy-in. |
-
-When enabled, solver strategy also applies at any stake in hands with a player listed in `dbo.CasinoSettingsPlayer` for `Feature = Solver`. Clients send the tournament buy-in as `TournamentBuyIn` (table currency) in tournament requests; it is not part of HandState and is read from the request. Without it, a set minimum buy-in is not reached. See [PokerBackoffice/docs/casino-settings.md](../PokerBackoffice/docs/casino-settings.md).
-
-Enabling a site through `scheduler.Site` or an active `dbo.CustomerMachine` automatically creates that customer/casino row with every feature Off. Re-enabling preserves edited values. PDecision 41 and later passes the customer ID and casino from machine registration to `CasinoSettings_List`; older clients receive fixed defaults rather than another customer's settings. `CasinoSettings_Upsert` requires `@CustomerId`.
-
-```sql
-EXEC dbo.CasinoSettings_Upsert @CustomerId = 3, @Casino = N'BluffPoker', @SolverVsHumans = 1, @SolverMinBuyIn = 20;
-EXEC dbo.BotAccount_UpdateStrategy @Casino = N'BluffPoker', @Username = N'bot1', @Strategy = 9;
-EXEC dbo.BotWinner_Add @Casino = N'BluffPoker', @Username = N'shark1', @GameType = 0;   -- DBLib EnumGameType: NLH 0, PLO4 1, PLO5 2, Tournament 4
-```
-
-Every `Database:RefreshIntervalMinutes` (default 10) PDecision re-reads the casino settings, the bot accounts with their profiles and the known winners (`StatsLoader.RefreshAccountsAndSettings`). Running tables pick up a changed profile within 10 minutes (`DecisionMaker.ProfileReloadMinutes`). If the database can't be read, the values in memory are kept.
-
 ## REST API
 
 Default address `http://127.0.0.1:5005`, set in `Api:Urls` (see [Configuration](#configuration)). Implemented in [ApiServer.cs](PDecision/ApiServer.cs), with the request handling in `Controller.GetDecision` and `Controller.AddHandState`.
@@ -119,7 +99,7 @@ flowchart LR
     DM -- Decision JSON --> Bot
     DM <-- AMQP low/medium/high --> Solvers[(Remote live<br/>solver servers)]
     DM --> Stats[(Local player-stats DB)]
-    DM --> Accounts[(Azure SQL pokerdb<br/>bot accounts, profiles)]
+    DM --> Accounts[(Azure SQL pokerdb<br/>bot accounts)]
     API --> HHB[HHBuilder<br/>one per table and bot]
     HHB --> Files[HH files + Azure upload]
     Files --> Stats
@@ -142,7 +122,7 @@ flowchart LR
 ### Decision request (`GetDecision`)
 
 - Deserialize and check the `HandState`. Cards are converted to lower case (`"Ts"` â†’ `"ts"`), the format DecisionMaking and the hand evaluators use.
-- Look up the `DecisionMaker` for the table and bot, or create one from the hero name, seat count, platform, blinds, game type, straddle and ante. Creating it reads the hero's playing profile from `dbo.BotAccount` in Azure SQL.
+- Look up the `DecisionMaker` for the table and bot, or create one from the hero name, seat count, platform, blinds, game type, straddle and ante.
 - Call `MakeDecision` and return the serialized `Decision`.
 
 ### Hand-history request (`AddHandState`)
@@ -165,7 +145,7 @@ At startup ([MachineConfig.cs](PDecision/MachineConfig.cs)) the service collects
 
 - Not registered or inactive: the service does not start. The window shows a **PC not registered** dialog ([RegistrationForm.cs](PDecision/RegistrationForm.cs)) with the PC's MAC addresses, a Copy button and the instruction to send them to the administrator and restart PDecision once whitelisted; the status bar shows the same. `/api/health` reports `failed` with the reason and the MAC addresses.
 - Unknown casino / platform name in the registration, or the registration can't be read (e.g. the Azure SQL firewall): the service does not start, and the error dialog and `/api/health` show the reason.
-- Registered: every table on this PC uses the registered `Casino` (stats DB, bot profiles, hand histories) and `Platform` (PokerSuite calls). `HandState.Platform` from the client is ignored and overwritten, and the self-tests use the same casino.
+- Registered: every table on this PC uses the registered `Casino` (stats DB and hand histories) and `Platform` (PokerSuite calls). `HandState.Platform` from the client is ignored and overwritten, and the self-tests use the same casino.
 
 Registering a customer and a machine:
 
@@ -232,7 +212,7 @@ The strategy logic does **not** live in this repo. It is in the **`DecisionMakin
 - **Framework reference:** `Microsoft.AspNetCore.App`, for the REST API.
 - **NuGet packages:** `DBLib` 1.0.33, `HandHistoryLib` 1.0.23, `PipesLib`, `PokerSuite.Shared`, `PokerUtil`, `QueryDBLib`, `RulesLib`, `NLog.Extensions.Logging`. Our own packages are built into the local feed `C:\NuGet\Packages`.
 - **Runtime services:**
-  - Azure SQL `pokerdbserver/pokerdb`: bot accounts and profiles (`dbo.BotAccount`, `dbo.BotWinner`). The PC's public IP must be allowed in the server firewall.
+  - Azure SQL `pokerdbserver/pokerdb`: bot account records (`dbo.BotAccount`, `dbo.BotWinner`). The PC's public IP must be allowed in the server firewall.
   - Azure blob storage `strategystoragegdr`: resources (`synchronisation`) and hand histories (`hand-histories`).
   - The PokerSuite SQL service, for service registration and heartbeat.
   - SQL Server Express LocalDB, for the local stats databases.
@@ -310,12 +290,6 @@ A 469-hand PLO4 run (3,840 decisions) had no decision errors, no skipped frames 
     "UploadToAzure": true,
     "LocalCopyDir": "",
     "DownloadIntervalMinutes": 5
-  },
-  "Strategy": {
-    "RabbitMQUri": "amqps://<user>:<password>@<host>/<vhost>",
-    "RabbitMQUriLive": "amqps://CONFIGURE_LOCALLY",
-    "RabbitMQUriTest": "amqps://CONFIGURE_LOCALLY",
-    "DiagnosticLevel": 3
   }
 }
 ```
@@ -323,7 +297,7 @@ A 469-hand PLO4 run (3,840 decisions) had no decision errors, no skipped frames 
 | Setting | Meaning |
 |---|---|
 | `Database:ConnectionString` | Azure SQL `pokerdb` with the restricted login `pdecision_client` (see [Security](#database-access)). Required. |
-| `Database:RefreshIntervalMinutes` | How often casino settings, bot accounts (profiles) and winners are re-read while running. Default `10`, `0` = only at startup. |
+| `Database:RefreshIntervalMinutes` | How often database-backed application data is refreshed. Default `10`, `0` = only at startup. |
 | `Api:Urls` | Address the REST API listens on. Use `http://0.0.0.0:5005` to accept other PCs, together with an API key. |
 | `Api:ApiKey` | When set, every request except `/api/health` must send it in the `X-Api-Key` header. |
 | `Api:EnableNamedPipes` | Also start the legacy named pipes. |
