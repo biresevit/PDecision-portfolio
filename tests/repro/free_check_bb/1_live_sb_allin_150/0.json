@@ -1,0 +1,109 @@
+{
+ "TableID": "15b47093-0865-47ad-834c-a97cd4aae997",
+ "TableName": "bp-NLH",
+ "TableHandle": 0,
+ "HandID": "pv2-pd40-breve-9fdc6b-15b47093-0865-47ad-834c-a97cd4aae997-18",
+ "IsNewHand": false,
+ "IsMyTurn": true,
+ "GameType": 2,
+ "TableType": 3,
+ "BBSize": 200,
+ "SBSize": 100,
+ "Ante": 0,
+ "Straddle": 0,
+ "DealerID": 6,
+ "Names": [
+  "B3",
+  "B4",
+  "B5",
+  "B6",
+  "",
+  "",
+  "B1",
+  "B2"
+ ],
+ "OriginalNames": [
+  "B3",
+  "B4",
+  "B5",
+  "B6",
+  "",
+  "",
+  "B1",
+  "B2"
+ ],
+ "EmptySeats": [
+  false,
+  false,
+  false,
+  false,
+  true,
+  true,
+  false,
+  false
+ ],
+ "InGame": [
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true
+ ],
+ "Stacks": [
+  13930,
+  15950,
+  14795,
+  30210,
+  0,
+  0,
+  14765,
+  0
+ ],
+ "Bets": [
+  200,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  150
+ ],
+ "Pot": 0,
+ "Cards": [
+  "2s",
+  "7c",
+  "",
+  "",
+  "",
+  "",
+  ""
+ ],
+ "OmahaCards": [],
+ "Showdowns": [
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  ""
+ ],
+ "Winners": [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0
+ ],
+ "PlayersLeft": 6,
+ "PlayersTotal": 6,
+ "NumPlacesPaid": 2
+}

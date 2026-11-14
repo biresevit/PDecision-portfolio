@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<!--
+  Obfuscation config for the customer-deliverable PDecision build. Renames types/members of our own three
+  assemblies (PDecision, DecisionMaking, PokerUtil) to hide the strategy logic from decompilation. Everything
+  else (NuGet/third-party DLLs, the PokerSuite.* packages we don't build here) ships unmodified.
+
+  {{WORKDIR}} is a placeholder: build.ps1 generates a real Obfuscar.xml from this file by substituting it with
+  an absolute path, because Obfuscar's own $(CONFIGURE_LOCALLY) variable substitution was removed (see README.md) and
+  <AssemblySearchPath> specifically requires an absolute path. Do not run this file directly - run build.ps1.
+
+  SKIP LIST — do not remove an entry without re-reading obfuscation/README.md "Why every entry here exists".
+  Two failure families, both confirmed by hanging/crashing an actual obfuscated build and diagnosing it with
+  dotnet-dump (see README.md for the full story):
+
+  1. Reflection-by-member-name. Renaming breaks code that looks a member up by its ORIGINAL name:
+     - PDecision.ApiSettings / HandHistorySettings / DatabaseSettings: bound from appsettings.json via
+       IConfiguration.Bind(), which matches JSON keys to property names by string.
+     - PDecision.HealthResponse / ErrorResponse: REST responses, pinned by [JsonPropertyName] anyway (belt
+       and suspenders).
+     - DecisionMaking's JSON data-transfer classes (gtoJson, SolverSolution, HandSolver, ChartHand,
+       PlayerSavedStats, Answer): deserialized with Newtonsoft.Json from strategy/solver/stats files or the
+       legacy TCP wire format, with no [JsonProperty] mapping, so Newtonsoft matches by property name too.
+     - DecisionMaking.SettingsStrategy / PreflopSettings: Visual Studio-generated ApplicationSettingsBase
+       classes. Every property getter/setter does this["<hardcoded original name>"], resolved via a
+       SettingsProperty collection built by reflecting over the ORIGINAL property names. These back most of
+       the strategy's tunable parameters, not just startup config.
+
+  2. Any type with a field/property typed as one of OUR OWN enums (listed below), while the type itself gets
+     renamed. This is not about JSON, [init], or reflection at all - it's a more basic metadata corruption:
+     renaming CasinoSettings (while leaving its property's enum TYPE, ProfileVsHumans, un-renamed) made the
+     CLR throw TypeLoadException trying to load CasinoSettings at all. Renaming PlayerAccount the same way
+     didn't crash, but silently corrupted it: DeepCopy<List<PlayerAccount>>'s Newtonsoft round-trip dropped
+     PlayerAccount.status/cards, so a test account came back as PlayerStatus.Bot (its default int value, 0)
+     with null cards, crashing two levels further down with a NullReferenceException. Every enum declared in
+     these three assemblies is skipped (renaming them has no real protection value anyway - they're short
+     structural labels, not algorithms - and several ARE looked up by member name too, e.g.
+     Enum.Parse<ProfileVsHumans> against the literal text in dbo.CasinoSettings.ProfileVsHumans). Every OTHER
+     type with an enum-typed member is also skipped: use obfuscation/audit-enum-members.ps1 after any change
+     that adds a new enum-typed field/property, to find whether its containing type needs adding here too.
+-->
+<Obfuscator>
+  <Var name="InPath" value="{{WORKDIR}}\obf-staging" />
+  <Var name="OutPath" value="{{WORKDIR}}\obf-output" />
+
+  <Var name="KeepPublicApi" value="false" />
+  <Var name="HidePrivateApi" value="true" />
+  <Var name="RenameFields" value="true" />
+  <Var name="RenameProperties" value="true" />
+  <Var name="RenameEvents" value="true" />
+  <Var name="HideStrings" value="true" />
+  <Var name="OptimizeMethods" value="true" />
+  <Var name="SuppressIldasm" value="true" />
+  <Var name="UseUnicodeNames" value="false" />
+  <Var name="MarkedOnly" value="false" />
+
+  <AssemblySearchPath path="{{WORKDIR}}\obf-staging" />
+
+  <Module file="{{WORKDIR}}\obf-staging\PDecision.dll">
+    <SkipType name="PDecision.ApiSettings" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PDecision.HandHistorySettings" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PDecision.DatabaseSettings" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PDecision.HealthResponse" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PDecision.HealthCasino" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PDecision.ErrorResponse" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PDecision.ServiceState" skipMethods="true" skipFields="true" skipProperties="true" />
+    <!-- Controller.State is PDecision.ServiceState-typed; see failure family 2 above -->
+    <SkipType name="PDecision.Controller" skipMethods="true" skipFields="true" skipProperties="true" />
+  </Module>
+
+  <Module file="{{WORKDIR}}\obf-staging\DecisionMaking.dll">
+    <SkipType name="DecisionMaking.omaha.gtoStrategy.gtoJson" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.PostflopStrategy.solver.SolverSolution" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.HandSolver" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.ChartHand" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.CasinoSettings" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.SettingsStrategy" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.PreflopSettings" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.statistika.PlayerSavedStats" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.TCP.Answer" skipMethods="true" skipFields="true" skipProperties="true" />
+    <!-- failure family 2: types with an enum-typed member -->
+    <SkipType name="DecisionMaking.HHBuilder" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.PostflopStrategy.rules.RuleProperties" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.Profiles.Profile" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.Strategies.PlayerAccount" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.Strategies.RangeCategories" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.Strategies.StrategyParams" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="HoldemHand.Hand" skipMethods="true" skipFields="true" skipProperties="true" />
+    <!-- every enum declared in this assembly (see failure family 2) -->
+    <SkipType name="DecisionMaking.Accounts.BoardBlocker/EnumBlockerEffect" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.Accounts.EnumHandType" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.ChartTag" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.eChartActions" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.eHHType" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.EnumAgroPlayer" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.EnumAgroShove" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.EnumAgroStat" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.EnumAllowOversFD" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.EnumBackdoor" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.EnumHCOffset" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.EnumOnlyHighestFd" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.EnumOnlyHighestGS" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.EnumOnlyOversOESD" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.EnumOuts" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.EnumOvers" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.EnumShowdown" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.EnumStake" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.EnumTableType" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.IsMultiway" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.LogLevel" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.omaha.EnumSortOption" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.omaha.gtoStrategy.GetHandStrenghtType" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.omaha.OmahaPostflopAction" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.PlayerCategory" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.PlayerStackCategory" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.PostflopStrategy.heroStrategy.BluffSpot.EnumBluffSpot" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.PostflopStrategy.rules.EnumBetCoeffHoldem" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.PostflopStrategy.rules.EnumBoardHoldem" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.PostflopStrategy.solver.SolverAction" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.PostflopStrategy.solver.SolverBackdoorEnum" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.PostflopStrategy.solver.SolverDrawEnum" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.PostflopStrategy.solver.SolverOvercardsEnum" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.PostflopStrategy.solver.SolverPrevAction" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.PostflopStrategy.solver.SolverShowdownEnum" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.PreflopStatNames" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.Profiles.EnumLoose" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.Profiles.EnumProfiles" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.ProfileVsHumans" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.Strategies.PlayerStatus" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="DecisionMaking.Type3betRange" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="HoldemHand.Hand/HandTypes" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="HoldemHand.Hand/PocketHand169Enum" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="HoldemHand.PocketHands/GroupTypeEnum" skipMethods="true" skipFields="true" skipProperties="true" />
+  </Module>
+
+  <Module file="{{WORKDIR}}\obf-staging\PokerUtil.dll">
+    <!-- failure family 2: types with an enum-typed member -->
+    <SkipType name="PokerUtil.HandCategory" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.HandStrength/&lt;&gt;c__DisplayClass14_0" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.HandStrength/&lt;&gt;c__DisplayClass16_0" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.ShowdownDrawBlocker" skipMethods="true" skipFields="true" skipProperties="true" />
+    <!-- every enum declared in this assembly -->
+    <SkipType name="PokerUtil.BoardDrawCategories" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.BoardHighCategories" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.EnumBetSizeCategory" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.EnumBlockerEffectOmaha" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.EnumBoards" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.EnumFlushDraw" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.EnumFullHouseDraw" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.EnumOmahaDraw" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.EnumRaiseSizeCategory" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.EnumSetOut" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.EnumStraightDraw" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.EnumTripOuts" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.EnumTwoPairOuts" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.OmahaBlocker/EnumOmahaDrawBlocker" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.OmahaBlocker/EnumOmahaSdBlocker" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.OmahaBlocker/EnumOmahaShowdownBLocked" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.OmahaHandCategoryType" skipMethods="true" skipFields="true" skipProperties="true" />
+    <SkipType name="PokerUtil.ShowdownType" skipMethods="true" skipFields="true" skipProperties="true" />
+  </Module>
+</Obfuscator>

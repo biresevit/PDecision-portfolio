@@ -1,0 +1,113 @@
+{
+  "HandID": "163055468",
+  "InGame": [
+    true,
+    true,
+    true,
+    false,
+    true,
+    true
+  ],
+  "Bets": [
+    0,
+    0.5,
+    1,
+    0,
+    4.54,
+    11.14
+  ],
+  "Stacks": [
+    26.71,
+    28.5,
+    29,
+    30,
+    41.62,
+    6.99
+  ],
+  "EmptySeats": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "Names": [
+    "andrew",
+    "emma",
+    "mason",
+    "john",
+    "Sheila",
+    "Bowen"
+  ],
+  "OriginalNames": [
+    "andrew",
+    "emma",
+    "mason",
+    "john",
+    "Sheila",
+    "Bowen"
+  ],
+  "Pot": 0,
+  "DealerID": 0,
+  "Cards": [
+    "8c",
+    "3c",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ],
+  "IsNewHand": true,
+  "IsMyTurn": true,
+  "IsCheckVisible": false,
+  "IsFoldVisible": false,
+  "IsRaiseVisible": false,
+  "Amount": 0,
+  "Showdowns": [
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ],
+  "Winners": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "OmahaCards": [],
+  "IsWinners": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "Ante": 0,
+  "UserName": null,
+  "PlayersLeft": 6,
+  "PlayersTotal": 6,
+  "PrevHandID": null,
+  "Straddle": 0,
+  "NumPlacesPaid": 3,
+  "TimeGenerated": "2026-11-02T09:48:16.6582403+01:00",
+  "BBSize": 1,
+  "SBSize": 0.5,
+  "MaxBuyIn": 0,
+  "CallTimeMinutes": 0,
+  "IsSupportedFormat": false,
+  "IsIamBackVisible": false,
+  "TableID": "128360738",
+  "TableName": "Fifty50",
+  "TableHandle": 0,
+  "Platform": 11,
+  "GameType": 2,
+  "TableType": 2
+}

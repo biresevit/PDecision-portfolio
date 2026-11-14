@@ -1,0 +1,278 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <FileVersion>1.0.0.51</FileVersion>
+    <AssemblyVersion>1.0.0.51</AssemblyVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="C:\Users\podel\.nuget\packages\decisionmaking\1.2.4.43\contentFiles\any\net7.0\libs\AutoItX3.Assembly.dll" />
+    <Content Remove="C:\Users\podel\.nuget\packages\decisionmaking\1.2.4.43\contentFiles\any\net7.0\libs\Interop.AutoItX3Lib.dll" />
+    <Content Remove="C:\Users\podel\.nuget\packages\decisionmaking\1.2.4.44\contentFiles\any\net7.0\dll\OmahaHandConverter.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="appsettings.json" />
+    <None Remove="images\cards\mini_2c.png" />
+    <None Remove="images\cards\mini_2d.png" />
+    <None Remove="images\cards\mini_2h.png" />
+    <None Remove="images\cards\mini_2s.png" />
+    <None Remove="images\cards\mini_3c.png" />
+    <None Remove="images\cards\mini_3d.png" />
+    <None Remove="images\cards\mini_3h.png" />
+    <None Remove="images\cards\mini_3s.png" />
+    <None Remove="images\cards\mini_4c.png" />
+    <None Remove="images\cards\mini_4d.png" />
+    <None Remove="images\cards\mini_4h.png" />
+    <None Remove="images\cards\mini_4s.png" />
+    <None Remove="images\cards\mini_5c.png" />
+    <None Remove="images\cards\mini_5d.png" />
+    <None Remove="images\cards\mini_5h.png" />
+    <None Remove="images\cards\mini_5s.png" />
+    <None Remove="images\cards\mini_6c.png" />
+    <None Remove="images\cards\mini_6d.png" />
+    <None Remove="images\cards\mini_6h.png" />
+    <None Remove="images\cards\mini_6s.png" />
+    <None Remove="images\cards\mini_7c.png" />
+    <None Remove="images\cards\mini_7d.png" />
+    <None Remove="images\cards\mini_7h.png" />
+    <None Remove="images\cards\mini_7s.png" />
+    <None Remove="images\cards\mini_8c.png" />
+    <None Remove="images\cards\mini_8d.png" />
+    <None Remove="images\cards\mini_8h.png" />
+    <None Remove="images\cards\mini_8s.png" />
+    <None Remove="images\cards\mini_9c.png" />
+    <None Remove="images\cards\mini_9d.png" />
+    <None Remove="images\cards\mini_9h.png" />
+    <None Remove="images\cards\mini_9s.png" />
+    <None Remove="images\cards\mini_Ac.png" />
+    <None Remove="images\cards\mini_Ad.png" />
+    <None Remove="images\cards\mini_Ah.png" />
+    <None Remove="images\cards\mini_As.png" />
+    <None Remove="images\cards\mini_Jc.png" />
+    <None Remove="images\cards\mini_Jd.png" />
+    <None Remove="images\cards\mini_Jh.png" />
+    <None Remove="images\cards\mini_Js.png" />
+    <None Remove="images\cards\mini_Kc.png" />
+    <None Remove="images\cards\mini_Kd.png" />
+    <None Remove="images\cards\mini_Kh.png" />
+    <None Remove="images\cards\mini_Ks.png" />
+    <None Remove="images\cards\mini_Qc.png" />
+    <None Remove="images\cards\mini_Qd.png" />
+    <None Remove="images\cards\mini_Qh.png" />
+    <None Remove="images\cards\mini_Qs.png" />
+    <None Remove="images\cards\mini_Tc.png" />
+    <None Remove="images\cards\mini_Td.png" />
+    <None Remove="images\cards\mini_Th.png" />
+    <None Remove="images\cards\mini_Ts.png" />
+    <None Remove="nlog.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_2c.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_2d.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_2h.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_2s.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_3c.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_3d.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_3h.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_3s.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_4c.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_4d.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_4h.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_4s.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_5c.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_5d.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_5h.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_5s.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_6c.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_6d.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_6h.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_6s.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_7c.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_7d.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_7h.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_7s.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_8c.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_8d.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_8h.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_8s.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_9c.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_9d.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_9h.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_9s.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Ac.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Ad.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Ah.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_As.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Jc.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Jd.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Jh.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Js.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Kc.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Kd.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Kh.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Ks.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Qc.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Qd.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Qh.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Qs.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Tc.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Td.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Th.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\cards\mini_Ts.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="nlog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DBLib" Version="1.0.33" />
+    <PackageReference Include="HandHistoryLib" Version="1.0.23" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.4.0" />
+    <PackageReference Include="PipesLib" Version="1.0.10" />
+    <PackageReference Include="PokerSuite.Shared" Version="1.10.0.1" />
+    <PackageReference Include="PokerUtil" Version="1.0.10" />
+    <PackageReference Include="QueryDBLib" Version="1.0.25" />
+    <PackageReference Include="RulesLib" Version="1.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\simulator-portfolio\DecisionMaking\DecisionMaking.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- REST API (Kestrel) hosted inside the app -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
