@@ -6,6 +6,14 @@
 
 A Windows desktop service hosting a REST API for poker decisions and hand-history processing. It maintains independent table contexts and uses the strategy libraries in simulator.
 
+## Demo
+
+PDecision (right) serving the [simulator](https://github.com/biresevit/simulator-portfolio) (left). Each time a bot at the simulated table is to act, the simulator posts the table state to `/api/decision`; PDecision logs the decision it returns (bot, table, street, action, bet size), and the simulator plays it.
+
+![PDecision logging each decision it returns while the simulator plays the hands](images/simulator_demo.gif)
+
+[Full-resolution video (MP4, 38 s)](images/simulator_demo.mp4)
+
 ## Engineering highlights
 
 - Kestrel hosted inside Windows Forms, JSON contracts, health reporting, and configuration overrides.
