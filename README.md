@@ -160,7 +160,7 @@ Registering a customer and a machine:
 ```sql
 EXEC dbo.Customer_Upsert @CustomerName = N'Customer A';
 EXEC dbo.Machine_Upsert @CustomerName = N'Customer A', @MacAddress = '00-1A-2B-3C-4D-5E',
-     @Casino = 'BluffPoker', @Platform = 'RunYourOwnPokerSite', @Description = N'office PC 1';
+     @Casino = '<Casino>', @Platform = '<Platform>', @Description = N'office PC 1';
 ```
 
 `Machine_Upsert` accepts `AA-BB-CC-DD-EE-FF`, `AA:BB:CC:DD:EE:FF` and `AABBCCDDEEFF`. Set `IsActive = 0` on the machine or the customer to stop it; this takes effect at the next start of the service. Customers find the MAC with `getmac /v /fo list`.
@@ -254,7 +254,7 @@ python tests/multitable_test.py --hands 15 --seed 7 --keep
 What it does:
 
 - Starts `PDecision.exe` with `PDECISION_HandHistory__UploadToAzure=false` and a temp `LocalCopyDir`, so no test hands reach the shared pool, and waits for `/api/health`.
-- Plays NLH on two 6-max tables (`test-A`, `test-B`) **in parallel**. The same three bots (`BluffBot01`-`03`, which must exist in `dbo.BotAccount`) sit at both tables, with one scripted human each. A small engine in the script deals the cards, runs the betting, and settles showdowns.
+- Plays NLH on two 6-max tables (`test-A`, `test-B`) **in parallel**. The same three bots (three test accounts, which must exist in `dbo.BotAccount`) sit at both tables, with one scripted human each. A small engine in the script deals the cards, runs the betting, and settles showdowns.
 - Every bot acts as its own client: after each change it posts its own view (itself as seat 0) to `/api/handhistory`, and when it is to act it asks `/api/decision` and the reply is played.
 - Checks every saved hand: one copy per hand and bot, with the right players, action sequence, board and winners, the three copies agree, and no frame was skipped.
 
