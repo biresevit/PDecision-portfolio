@@ -129,7 +129,7 @@ flowchart LR
 
 ### Decision request (`GetDecision`)
 
-- Deserialize and check the `HandState`. Cards are converted to lower case (`"Ts"` â†’ `"ts"`), the format DecisionMaking and the hand evaluators use.
+- Deserialize and check the `HandState`. Cards are converted to lower case (`"Ts"` → `"ts"`), the format DecisionMaking and the hand evaluators use.
 - Look up the `DecisionMaker` for the table and bot, or create one from the hero name, seat count, platform, blinds, game type, straddle and ante.
 - Call `MakeDecision` and return the serialized `Decision`.
 
@@ -212,11 +212,11 @@ The first start downloads about 6 GB in roughly 1.3 million files (`rules`: 976k
 | `PDecision/nlog.config` | NLog file logging settings. |
 | [docs/](docs/) | Client documentation: the PDF, its generator script and the profile image. |
 
-The strategy logic does **not** live in this repo. It is in the **`DecisionMaking`** project of the `simulator-portfolio` repo, referenced as `..\..\simulator-portfolio\DecisionMaking\DecisionMaking.csproj`. That project holds `DecisionMaker`, `HHBuilder`, `StatsLoader`, `ResourceSync`, `StatsDBCreator`, `UploadStatistics` and the solver and AMQP clients.
+The strategy logic does **not** live in this repo. It is in the private **`DecisionMaking`** project, which is not published; the project files reference it as `..\..\simulator-portfolio\DecisionMaking\DecisionMaking.csproj`. That project holds `DecisionMaker`, `HHBuilder`, `StatsLoader`, `ResourceSync`, `StatsDBCreator`, `UploadStatistics` and the solver and AMQP clients.
 
 ## Dependencies
 
-- **Project reference:** `DecisionMaking` from the `simulator-portfolio` repo, checked out next to this repo.
+- **Project reference:** the private `DecisionMaking` project (not published), expected next to this repo.
 - **Framework reference:** `Microsoft.AspNetCore.App`, for the REST API.
 - **NuGet packages:** `DBLib` 1.0.33, `HandHistoryLib` 1.0.23, `PipesLib`, `PokerSuite.Shared`, `PokerUtil`, `QueryDBLib`, `RulesLib`, `NLog.Extensions.Logging`. Our own packages are built into the local feed `C:\NuGet\Packages`.
 - **Runtime services:**
@@ -230,12 +230,12 @@ The strategy logic does **not** live in this repo. It is in the **`DecisionMakin
 
 ```text
 bot/
-â”œâ”€â”€ PDecision/        <- this repo (PDecision.sln)
-â””â”€â”€ simulator/        <- DecisionMaking, DBLib, HandHistoryLib, CONFIGURE_LOCALLY
+|-- PDecision-portfolio/               <- this repo (PDecision.sln)
+`-- simulator-portfolio/DecisionMaking <- private project, not published
 ```
 
 1. Install the .NET 8 SDK on Windows.
-2. Check out the `simulator-portfolio` repo next to this repo.
+2. Place the private `DecisionMaking` project next to this repo, at the path the project files reference. Without it this snapshot does not build.
 3. Build with `dotnet build PDecision/PDecision.csproj`. If the private PokerSuite feed answers 401, restore from the local folders instead:
    `dotnet restore PDecision/PDecision.csproj -s C:\NuGet\Packages -s %USERPROFILE%\.nuget\packages`, then build with `--no-restore`.
 4. Run `PDecision.exe`. Wait until `GET http://127.0.0.1:5005/api/health` returns `ready`, or the status bar shows `Done initializing DM: Xs`. If a self-test fails, a dialog shows `Error initializing Decision Maker`. Check the log when that happens.
